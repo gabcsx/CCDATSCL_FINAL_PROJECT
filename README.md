@@ -1,1 +1,92 @@
-# CCDATSCL_FINAL_PROJECT
+# Apple Health Storyboard — Same-Day Energy Expenditure Analysis
+
+## Overview
+
+An end-to-end data-science project that ingests personal Apple Health data, builds curated daily datasets, performs exploratory analysis and statistical testing, and fits explanatory models for daily active energy expenditure (`active_energy_kcal`).
+
+## Research Objective
+
+> *Which daily activity and physiology metrics best explain same-day active energy expenditure, and does a nonlinear ensemble (Random Forest) capture meaningful structure beyond a linear baseline?*
+
+This is a **same-day explanatory** analysis — not a next-day forecast. All associations reported are correlational; no causal claims are made.
+
+## Data Sources
+
+| Source | File | Description |
+|---|---|---|
+| Apple Health XML export | `data/raw/export.xml` | Record-level heart-rate, energy, exercise, flights, stand-hours data parsed via `iterparse`. |
+| Health AutoExport CSV | `data/raw/HealthAutoExport-2025-11-24-2026-02-10.csv` | Daily summaries — canonical source for steps, distance, and extended physiology signals. |
+
+**Study period:** 2025-11-24 to 2026-02-02 (71 calendar days; 46 rows after NaN removal for modeling).
+
+**Single-participant dataset.** The sole participant collected and analyzed these data; no external subjects were involved.
+
+## Repository Structure
+
+```
+├── data/
+│   ├── raw/                  # Raw Apple Health exports (git-ignored; large/private)
+│   └── processed/            # Gold-layer CSVs (git-ignored; reproducible)
+├── figures/                  # Exported plots from notebook (tracked in git)
+├── notebooks/
+│   └── AppleHealth_Storyboard_Project.ipynb   # Main analysis notebook
+├── reports/
+│   └── gold_data_quality_report_*.txt         # Pipeline QA report
+├── src/
+│   ├── __init__.py
+│   └── apple_health_pipeline.py               # ETL pipeline module
+├── .gitignore
+└── README.md
+```
+
+## Reproduction Instructions
+
+### 1. Environment
+
+Python ≥ 3.10 is recommended. Install dependencies:
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn scipy
+```
+
+### 2. Place raw data
+
+Copy `export.xml` and the AutoExport CSV into `data/raw/`.
+
+### 3. Run the notebook
+
+Open `notebooks/AppleHealth_Storyboard_Project.ipynb` and execute all cells top-to-bottom (**Kernel → Restart & Run All**). The notebook will:
+
+1. **Phase 0** — Import libraries, set paths, define helpers.
+2. **Phase 1** — Run the ETL pipeline (`src/apple_health_pipeline.py`), produce Gold Core and Gold Extended CSVs in `data/processed/`, and print sanity checks.
+3. **Phase 2** — Exploratory data analysis: time-series plots, distributions, scatter plot, correlation heatmap, missingness chart.
+4. **Phase 3** — Statistical tests: Pearson correlation, Spearman robustness check, Shapiro-Wilk normality, Welch's *t*-test, Cohen's *d*.
+5. **Phase 4** — Modeling: Linear Regression, Random Forest, Dummy/Naive baselines, feature-importance analysis, ablation study, time-series cross-validation, residual diagnostics.
+
+All figures are automatically saved to `figures/` during execution. These are tracked in git so reviewers can inspect plots without re-running the notebook.
+
+## Methods Summary
+
+| Component | Detail |
+|---|---|
+| **Target** | `active_energy_kcal` (daily active energy) |
+| **Features** | Same-day activity + HR metrics, lag-1 context features, day-of-week dummies |
+| **Models** | Linear Regression (baseline), Random Forest (`n_estimators=500`, `random_state=42`) |
+| **Baselines** | Dummy (mean), Naive (yesterday) |
+| **Split** | Chronological 80/20 (train = 36, test = 10) |
+| **Robustness** | 5-fold walk-forward TS-CV, ablation study, leakage audit, residual plots |
+
+## Key Outputs
+
+- **Gold Core CSV** — 12-column daily dataset for modeling
+- **Gold Extended CSV** — 18-column dataset including physiology signals
+- **9 exported figures** in `figures/` (prep, EDA, and model diagnostics)
+- **Quality report** in `reports/`
+
+## Limitations
+
+- Single participant — results may not generalize.
+- Small sample (n = 46 modeling rows; test set = 10 days).
+- Observational design — all associations are correlational.
+- Daily autocorrelation may understate standard errors; *p*-values are treated as descriptive.
+- Extended physiology columns excluded from modeling due to missingness.

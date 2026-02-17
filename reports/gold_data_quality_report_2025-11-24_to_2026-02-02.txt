@@ -1,0 +1,70 @@
+GOLD DATA QUALITY REPORT
+
+Range: 2025-11-24 to 2026-02-02 (inclusive)
+Rows: 71
+
+gold_core missingness (% top 20):
+hr_mean_bpm            23.94
+hr_min_bpm             23.94
+hr_max_bpm             23.94
+active_energy_kcal     15.49
+resting_energy_kcal    15.49
+exercise_min           15.49
+stand_hours            15.49
+date                    0.00
+steps                   0.00
+distance_km             0.00
+flights_climbed         0.00
+hr_samples              0.00
+
+gold_extended missingness (% top 20):
+resp_rate                         70.42
+resting_hr_bpm                    39.44
+hrv_ms                            29.58
+hr_mean_bpm                       23.94
+hr_max_bpm                        23.94
+hr_min_bpm                        23.94
+stand_hours                       15.49
+exercise_min                      15.49
+resting_energy_kcal               15.49
+active_energy_kcal                15.49
+walking_speed_kmh                  1.41
+walking_step_length_cm             1.41
+walking_speed_kmh_missing          0.00
+distance_km_xml_rawsum             0.00
+resting_hr_bpm_missing             0.00
+resp_rate_missing                  0.00
+walking_step_length_cm_missing     0.00
+hrv_ms_missing                     0.00
+date                               0.00
+steps_xml_rawsum                   0.00
+
+Meters per step (valid days) describe:
+
+count    71.000000
+mean      0.712673
+std       0.052149
+min       0.574456
+1%        0.589175
+5%        0.606491
+50%       0.730097
+95%       0.765861
+99%       0.792351
+max       0.828571
+
+Meters-per-step outliers (<0.3 or >1.5): 0
+
+Suspicious zero-energy days detected (pre-conversion): 11
+
+XML rawsum steps / Auto steps ratio (describe):
+
+count    71.000000
+mean      1.550214
+std       0.360045
+min       1.000000
+1%        1.000000
+5%        1.000000
+50%       1.661410
+95%       2.009972
+99%       2.072918
+max       2.158626
